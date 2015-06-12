@@ -7,12 +7,14 @@ var clients = [];
 
 net.createServer(function (sock) {
 	
-	clients.push(sock);
-	console.log('Baglandi : '+sock.remoteAddress +':'+sock.remotePort);
 
 	sock.on('data',function(data){
-		if(data[0]===109)	
-			broadcast(data,sock);
+		if(data[0]===106) join(data,sock);
+		else if(data[0]===109) broadcast(data,sock);
+	});
+
+	sock.on('end'), function () {
+		clients.splice(clients.indexOf(sock),1);
 	});
 
 	function broadcast(message, sender){
@@ -21,6 +23,15 @@ net.createServer(function (sock) {
 			client.write(message);
 		});
 		process.stdout.write(message);
+	}
+
+	function join(username,sender){
+		var u = username.toString('utf-8');
+		sender.name= u.substring(1,u.length);
+		clients.push(sender);
+		console.log('Baglandi : '+sock.remoteAddress +':'+sock.remotePort);
+		process.stdout.write(username);
+
 	}
 
 }).listen(PORT,HOST);
