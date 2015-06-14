@@ -1,6 +1,5 @@
 var net = require('net');
 
-var HOST = '46.101.159.34';
 var PORT = 4444;
 
 var clients = [];
@@ -13,7 +12,7 @@ net.createServer(function (sock) {
 		else if(data[0]===109) broadcast(data,sock);
 	});
 
-	sock.on('end'), function () {
+	sock.on('end', function () {
 		clients.splice(clients.indexOf(sock),1);
 	});
 
@@ -34,6 +33,6 @@ net.createServer(function (sock) {
 
 	}
 
-}).listen(PORT,HOST);
+}).listen(PORT);
 
 console.log('Dinleme basladi\n');
